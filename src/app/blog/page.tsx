@@ -1,36 +1,37 @@
-import React from 'react'
+'use client'
 
-import { Metadata } from 'next'
+import React, { useEffect, useState } from 'react'
+
 import Link from 'next/link'
+import { getAllPosts } from '../../../services/getPosts'
+import PostSearch from '../components/PostSearch'
 
-export const metadata: Metadata = {
-    title: 'Blog | Next App',
-}
+function Blog() {
+    const [posts, setPosts] = useState<any[]>([])
+    const [loading, setLoading] = useState(true)
 
-async function getData() {
-    const res = await fetch('http://jsonplaceholder.typicode.com/posts', {
-        next: { revalidate: 60 },
-    })
+    useEffect(() => {
+        getAllPosts().then(posts => {
+            setPosts(posts)
+            setLoading(false)
+        })
+    }, [])
 
-    if (!res.ok) {
-        throw new Error('Unable to fetch')
-    }
-
-    return res.json()
-}
-
-async function Blog() {
-    const posts = await getData()
     return (
         <div>
             Blog
-            <ul>
-                {posts.map((post: any) => (
-                    <li key={post.id}>
-                        <Link href={`/blog/${post.id}`}>{post.title}</Link>
-                    </li>
-                ))}
-            </ul>
+            <PostSearch onSearch={setPosts} />
+            {loading ? (
+                <h1>Loading...</h1>
+            ) : (
+                <ul>
+                    {posts.map((post: any) => (
+                        <li key={post.id}>
+                            <Link href={`/blog/${post.id}`}>{post.title}</Link>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     )
 }

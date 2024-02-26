@@ -19,9 +19,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className=" scroll-smooth ">
-            <body
-                className={`${inter.className} flex min-h-screen overflow-clip flex-col`}
-            >
+            <body className={`${inter.className} flex min-h-screen flex-col`}>
                 <Header />
                 <main className="flex-auto">
                     <Container>{children}</Container>
